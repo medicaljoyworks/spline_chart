@@ -210,8 +210,9 @@ class SplineChartPainter extends CustomPainter {
     // draw horizontal grid lines
     double yRatio = (size.height - paddingY) / (yMax - yMin);
     for (double y = yMin; y <= (yMax); y += yStep) {
-      canvas.drawLine(Offset(paddingX, (y - yMin - paddingY) * yRatio),
-          Offset(size.width, (y - yMin - paddingY) * yRatio), gridLinePaint);
+      double yPos = (size.height - paddingY) - ((y - yMin) * yRatio);
+      canvas.drawLine(Offset(paddingX, yPos),
+          Offset(size.width, yPos), gridLinePaint);
 
       TextSpan span = TextSpan(
           style: TextStyle(color: this.textColor,fontSize: this.textSize),
@@ -223,10 +224,7 @@ class SplineChartPainter extends CustomPainter {
           canvas,
           Offset(
               paddingX - tp.width - 5,
-              size.height -
-                  paddingY -
-                  (y - yMin - paddingY) * yRatio -
-                  tp.height / 2));
+              yPos - tp.height/2));
     }
 
     // sort values by x position
@@ -240,21 +238,21 @@ class SplineChartPainter extends CustomPainter {
       if (i == 0) {
         if (xValues[0] == 0) {
           path.moveTo(paddingX,
-              size.height - paddingY - (values[xValues[0]] ?? 0) * yRatio);
-          circles.add(Offset(paddingX,size.height - paddingY - (values[xValues[0]] ?? 0) * yRatio));
+              size.height - paddingY - ((values[xValues[0]] ?? 0) - yMin) * yRatio);
+          circles.add(Offset(paddingX,size.height - paddingY - ((values[xValues[0]] ?? 0) - yMin) * yRatio));
         } else {
-          path.moveTo(paddingX, size.height - paddingY);
-          circles.add(Offset(paddingX,size.height - paddingY));
+          path.moveTo(paddingX, size.height - paddingY - yMin);
+          circles.add(Offset(paddingX,size.height - paddingY - yMin));
         }
       } else {
         final yPrevious =
-            size.height - paddingY - (values[xValues[i - 1]] ?? 0) * yRatio;
+            size.height - paddingY - ((values[xValues[i - 1]] ?? 0) - yMin) * yRatio;
         final xPrevious = xValues[i - 1] * xRatio + paddingX;
         final controlPointX =
             xPrevious + (xValues[i] * xRatio + paddingX - xPrevious) / 2;
 
         final yValue =
-            size.height - paddingY - (values[xValues[i]] ?? 0) * yRatio;
+            size.height - paddingY - ((values[xValues[i]] ?? 0) - yMin) * yRatio;
 
         path.cubicTo(controlPointX, yPrevious, controlPointX, yValue,
             xValues[i] * xRatio + paddingX, yValue);
