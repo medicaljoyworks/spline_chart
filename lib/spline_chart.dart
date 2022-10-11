@@ -169,7 +169,6 @@ class _SplineChartPainter extends CustomPainter {
   final Color circleStrokeColor;
 
   _SplineChartPainter({
-    Key? key,
     required this.lineColor,
     required this.gridLineColor,
     required this.textColor,
