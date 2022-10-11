@@ -1,6 +1,6 @@
 name: spline_chart
 description: Spline chart library for Flutter. Spline chart is a line chart that uses curves instead of straight lines.
-version: 0.0.1
+version: 0.0.2
 homepage: https://www.medicaljoyworks.com/
 repository: https://github.com/medicaljoyworks/spline_chart
 
