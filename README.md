@@ -11,29 +11,34 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages). 
 -->
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+Spline chart library for Flutter. Spline chart is a line chart that uses curves instead of straight lines.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+![Screenshot 1](https://raw.githubusercontent.com/medicaljoyworks/spline_chart/main/doc/images/screenshot1.png)
+![Screenshot 2](https://raw.githubusercontent.com/medicaljoyworks/spline_chart/main/doc/images/screenshot2.png)
+![Screenshot 3](https://raw.githubusercontent.com/medicaljoyworks/spline_chart/main/doc/images/screenshot3.png)
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
+Import the Spline Chart package and use the SplineChart widget.
 
 ```dart
-const like = 'sample';
+import 'package:spline_chart/spline_chart.dart';
+
+SplineChart(
+  values: {0:10,15:30,50:10,44:100,80:50,100:90},
+  verticalLineEnabled: true,
+  verticalLinePosition: 90.0,
+  verticalLineStrokeWidth: 2.0,
+  verticalLineText: "The middle",
+  drawCircles: true,
+  circleRadius: 5,
+  width: 320,
+  height: 400,
+)
 ```
 
 ## Additional information
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+This plugin is developed by [Medical Joyworks](https://www.medicaljoyworks.com/).

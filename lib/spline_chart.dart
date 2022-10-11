@@ -6,55 +6,110 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
 
 /// A Spline chart widget.
+///
+/// This widget draws a spline chart based on the given [values].
 class SplineChart extends StatelessWidget {
+  /// Width of the chart
   final double width;
+
+  /// Height of the chart
   final double height;
+
+  /// Line chart values
+  ///
+  /// Each key in the hash map represents the X position and it's value as the Y position
   final Map<double, double> values;
+
+  /// Start of the X axis
+  ///
+  /// Defaults to 0
   final double xStart;
+
+  /// End of the X axis
+  ///
+  /// Defaults to 100
   final double xEnd;
+
+  /// The X axis lable intervals
+  ///
+  /// Defaults to 10
   final double xStep;
+
+  /// Color of the line being drawn
   final Color lineColor;
+
+  /// Color of the grid lines
   final Color gridLineColor;
+
+  /// Color of the label texts
   final Color textColor;
+
+  /// Size of the label texts
   final double textSize;
+
+  /// Thickness of the line
   final double strokeWidth;
+
+  /// Color of the fill
   final Color fillColor;
+
+  /// Opacity of the fill
   final double fillOpactiy;
+
+  /// If true, a vertical line will be drawn at [verticalLinePosition]
   final bool verticalLineEnabled;
+
+  /// Position of the vertical line
   final double verticalLinePosition;
+
+  /// Thickness of the vertical line
   final double verticalLineStrokeWidth;
+
+  /// Color of the vertical line
   final Color verticalLineColor;
+
+  /// The text for the vertical line label
+  ///
+  /// Leave it empty if no label is needed
   final String? verticalLineText;
+
+  /// If true, each data point would be highlighted by circles
   final bool drawCircles;
+
+  /// Fill color of the data point circles
   final Color circleFillColor;
+
+  /// Thickness of the data point circles
   final Color circleStrokeColor;
+
+  /// Radius of the data point circles
   final double circleRadius;
 
-  const SplineChart({
-    Key? key,
-    required this.values,
-    this.width = 320.0,
-    this.height = 200.0,
-    this.lineColor = Colors.black,
-    this.gridLineColor = Colors.grey,
-    this.textColor = Colors.grey,
-    this.textSize = 14,
-    this.xStart = 0,
-    this.xEnd = 100,
-    this.xStep = 10,
-    this.strokeWidth = 1,
-    this.fillColor = Colors.lightBlue,
-    this.fillOpactiy = 0.5,
-    this.verticalLineEnabled = false,
-    this.verticalLinePosition = 0.0,
-    this.verticalLineStrokeWidth = 1.0,
-    this.verticalLineColor = Colors.red,
-    this.verticalLineText,
-    this.drawCircles = false,
-    this.circleFillColor = Colors.lightBlueAccent,
-    this.circleStrokeColor = Colors.black,
-    this.circleRadius = 5
-  }) : super(key: key);
+  const SplineChart(
+      {Key? key,
+      required this.values,
+      this.width = 320.0,
+      this.height = 200.0,
+      this.lineColor = Colors.black,
+      this.gridLineColor = Colors.grey,
+      this.textColor = Colors.grey,
+      this.textSize = 14,
+      this.xStart = 0,
+      this.xEnd = 100,
+      this.xStep = 10,
+      this.strokeWidth = 1,
+      this.fillColor = Colors.lightBlue,
+      this.fillOpactiy = 0.5,
+      this.verticalLineEnabled = false,
+      this.verticalLinePosition = 0.0,
+      this.verticalLineStrokeWidth = 1.0,
+      this.verticalLineColor = Colors.red,
+      this.verticalLineText,
+      this.drawCircles = false,
+      this.circleFillColor = Colors.lightBlueAccent,
+      this.circleStrokeColor = Colors.black,
+      this.circleRadius = 5})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +119,7 @@ class SplineChart extends StatelessWidget {
         height: this.height,
         child: CustomPaint(
             size: Size(this.width, this.height),
-            painter: SplineChartPainter(
+            painter: _SplineChartPainter(
               lineColor: this.lineColor,
               gridLineColor: this.gridLineColor,
               textColor: this.textColor,
@@ -91,7 +146,7 @@ class SplineChart extends StatelessWidget {
   }
 }
 
-class SplineChartPainter extends CustomPainter {
+class _SplineChartPainter extends CustomPainter {
   final Color lineColor;
   final Color gridLineColor;
   final Color textColor;
@@ -113,7 +168,7 @@ class SplineChartPainter extends CustomPainter {
   final Color circleFillColor;
   final Color circleStrokeColor;
 
-  SplineChartPainter({
+  _SplineChartPainter({
     Key? key,
     required this.lineColor,
     required this.gridLineColor,
@@ -196,7 +251,7 @@ class SplineChartPainter extends CustomPainter {
           Offset(x * xRatio + paddingX, size.height - paddingY), gridLinePaint);
 
       TextSpan span = TextSpan(
-          style: TextStyle(color: this.textColor,fontSize: this.textSize),
+          style: TextStyle(color: this.textColor, fontSize: this.textSize),
           text: numberFormat.format(x.floor()));
       TextPainter tp =
           TextPainter(text: span, textDirection: TextDirection.ltr);
@@ -211,20 +266,16 @@ class SplineChartPainter extends CustomPainter {
     double yRatio = (size.height - paddingY) / (yMax - yMin);
     for (double y = yMin; y <= (yMax); y += yStep) {
       double yPos = (size.height - paddingY) - ((y - yMin) * yRatio);
-      canvas.drawLine(Offset(paddingX, yPos),
-          Offset(size.width, yPos), gridLinePaint);
+      canvas.drawLine(
+          Offset(paddingX, yPos), Offset(size.width, yPos), gridLinePaint);
 
       TextSpan span = TextSpan(
-          style: TextStyle(color: this.textColor,fontSize: this.textSize),
+          style: TextStyle(color: this.textColor, fontSize: this.textSize),
           text: numberFormat.format(y.floor()));
       TextPainter tp =
           TextPainter(text: span, textDirection: TextDirection.ltr);
       tp.layout();
-      tp.paint(
-          canvas,
-          Offset(
-              paddingX - tp.width - 5,
-              yPos - tp.height/2));
+      tp.paint(canvas, Offset(paddingX - tp.width - 5, yPos - tp.height / 2));
     }
 
     // sort values by x position
@@ -237,27 +288,36 @@ class SplineChartPainter extends CustomPainter {
     for (int i = 0; i < xValues.length; i++) {
       if (i == 0) {
         if (xValues[0] == 0) {
-          path.moveTo(paddingX,
-              size.height - paddingY - ((values[xValues[0]] ?? 0) - yMin) * yRatio);
-          circles.add(Offset(paddingX,size.height - paddingY - ((values[xValues[0]] ?? 0) - yMin) * yRatio));
+          path.moveTo(
+              paddingX,
+              size.height -
+                  paddingY -
+                  ((values[xValues[0]] ?? 0) - yMin) * yRatio);
+          circles.add(Offset(
+              paddingX,
+              size.height -
+                  paddingY -
+                  ((values[xValues[0]] ?? 0) - yMin) * yRatio));
         } else {
           path.moveTo(paddingX, size.height - paddingY - yMin);
-          circles.add(Offset(paddingX,size.height - paddingY - yMin));
+          circles.add(Offset(paddingX, size.height - paddingY - yMin));
         }
       } else {
-        final yPrevious =
-            size.height - paddingY - ((values[xValues[i - 1]] ?? 0) - yMin) * yRatio;
+        final yPrevious = size.height -
+            paddingY -
+            ((values[xValues[i - 1]] ?? 0) - yMin) * yRatio;
         final xPrevious = xValues[i - 1] * xRatio + paddingX;
         final controlPointX =
             xPrevious + (xValues[i] * xRatio + paddingX - xPrevious) / 2;
 
-        final yValue =
-            size.height - paddingY - ((values[xValues[i]] ?? 0) - yMin) * yRatio;
+        final yValue = size.height -
+            paddingY -
+            ((values[xValues[i]] ?? 0) - yMin) * yRatio;
 
         path.cubicTo(controlPointX, yPrevious, controlPointX, yValue,
             xValues[i] * xRatio + paddingX, yValue);
 
-        circles.add(Offset(xValues[i] * xRatio + paddingX,yValue));
+        circles.add(Offset(xValues[i] * xRatio + paddingX, yValue));
       }
     }
     canvas.drawPath(path, paint);
@@ -306,7 +366,7 @@ class SplineChartPainter extends CustomPainter {
 
       if (this.verticalLineText != null) {
         TextSpan span = TextSpan(
-          style: TextStyle(color: verticalLineColor,fontSize: this.textSize),
+          style: TextStyle(color: verticalLineColor, fontSize: this.textSize),
           text: this.verticalLineText,
         );
         TextPainter tp = TextPainter(
@@ -315,17 +375,35 @@ class SplineChartPainter extends CustomPainter {
         );
         tp.layout();
         double x = verticalLinePosition * xRatio + paddingX + 5;
-        if (x+tp.width>size.width) {
+        if (x + tp.width > size.width) {
           x = verticalLinePosition * xRatio + paddingX - tp.width - 5;
         }
         tp.paint(canvas, Offset(x, 5));
       }
-
     }
   }
 
   @override
-  bool shouldRepaint(SplineChartPainter old) {
-    return old.lineColor != lineColor && old.values != values;
+  bool shouldRepaint(_SplineChartPainter old) {
+    return old.lineColor != lineColor ||
+        old.gridLineColor != gridLineColor ||
+        old.textColor != textColor ||
+        old.textSize != textSize ||
+        old.fillColor != fillColor ||
+        old.fillOpactiy != fillOpactiy ||
+        old.values != values ||
+        old.xStart != xStart ||
+        old.xEnd != xEnd ||
+        old.xStep != xStep ||
+        old.strokeWidth != strokeWidth ||
+        old.verticalLineEnabled != verticalLineEnabled ||
+        old.verticalLinePosition != verticalLinePosition ||
+        old.verticalLineStrokeWidth != verticalLineStrokeWidth ||
+        old.verticalLineColor != verticalLineColor ||
+        old.verticalLineText != verticalLineText ||
+        old.drawCircles != drawCircles ||
+        old.circleRadius != circleRadius ||
+        old.circleFillColor != circleFillColor ||
+        old.circleStrokeColor != circleStrokeColor;
   }
 }
